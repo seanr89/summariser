@@ -1,0 +1,5 @@
+{
+  "name": "AI Content Summarizer",
+  "description": "An application that uses Gemini to generate summaries of text from files or web page URLs. Users can input a URL or upload a document, and the app provides a concise summary which can be exported as a text file.",
+  "requestFramePermissions": []
+}
