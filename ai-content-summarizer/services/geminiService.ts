@@ -1,6 +1,5 @@
-
 import { GoogleGenAI, GenerateContentResponse, GroundingChunk } from "@google/genai";
-import { SummaryResult } from '../types';
+import { SummaryResult, SummaryDetail } from '../types';
 
 if (!process.env.API_KEY) {
     throw new Error("API_KEY environment variable not set");
@@ -11,10 +10,36 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 const textModel = 'gemini-2.5-flash';
 const groundedModel = 'gemini-2.5-flash';
 
-export const summarizeText = async (text: string): Promise<SummaryResult> => {
+const getTextSummarizationPrompt = (detail: SummaryDetail): string => {
+    switch (detail) {
+        case SummaryDetail.BRIEF:
+            return `Provide a very brief, one-paragraph summary of the following text. Capture only the main points.`;
+        case SummaryDetail.COMPREHENSIVE:
+            return `Provide a comprehensive, in-depth summary of the following text. Break it down into sections with headings and use bullet points for key details. The goal is a thorough overview.`;
+        case SummaryDetail.DETAILED:
+        default:
+            return `Provide a concise, easy-to-read summary of the following text. Use bullet points for key takeaways.`;
+    }
+}
+
+const getUrlSummarizationPrompt = (url: string, detail: SummaryDetail): string => {
+    switch (detail) {
+        case SummaryDetail.BRIEF:
+            return `Provide a very brief, one-paragraph summary of the main content found at the URL: ${url}.`;
+        case SummaryDetail.COMPREHENSIVE:
+            return `Provide a comprehensive, in-depth summary of the main content at ${url}. Break it down into sections with headings and use bullet points for key details, data, and arguments. The goal is a thorough and exhaustive overview.`;
+        case SummaryDetail.DETAILED:
+        default:
+            return `Please provide a detailed summary of the main content found at the following URL: ${url}. Focus on the key points and main arguments. If the page is a news article, identify the main event and its context. Use bullet points for key takeaways.`;
+    }
+}
+
+
+export const summarizeText = async (text: string, detail: SummaryDetail): Promise<SummaryResult> => {
     if (!text) throw new Error("Input text cannot be empty.");
 
-    const prompt = `Provide a concise, easy-to-read summary of the following text. Use bullet points for key takeaways:\n\n---\n\n${text}`;
+    const instruction = getTextSummarizationPrompt(detail);
+    const prompt = `${instruction}\n\n---\n\n${text}`;
 
     try {
         const response: GenerateContentResponse = await ai.models.generateContent({
@@ -28,10 +53,10 @@ export const summarizeText = async (text: string): Promise<SummaryResult> => {
     }
 };
 
-export const summarizeUrl = async (url: string): Promise<SummaryResult> => {
+export const summarizeUrl = async (url: string, detail: SummaryDetail): Promise<SummaryResult> => {
     if (!url) throw new Error("URL cannot be empty.");
 
-    const prompt = `Please provide a detailed summary of the main content found at the following URL: ${url}. Focus on the key points and main arguments. If the page is a news article, identify the main event and its context.`;
+    const prompt = getUrlSummarizationPrompt(url, detail);
 
     try {
         const response: GenerateContentResponse = await ai.models.generateContent({

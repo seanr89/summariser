@@ -112,7 +112,7 @@ const App: React.FC = () => {
     <button
         type="button"
         onClick={() => setSummaryDetail(detail)}
-        className={`relative inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 w-1/3
+        className={`relative inline-flex items-center justify-center px-4 py-3 text-sm font-medium transition-colors focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 w-1/3
             ${isFirst ? 'rounded-l-md' : ''}
             ${isLast ? 'rounded-r-md' : '-ml-px'}
             ${summaryDetail === detail
