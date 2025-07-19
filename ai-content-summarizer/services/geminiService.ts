@@ -1,11 +1,12 @@
-import { GoogleGenAI, GenerateContentResponse, GroundingChunk } from "@google/genai";
+import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { SummaryResult, SummaryDetail } from '../types';
 
 if (!process.env.API_KEY) {
-    throw new Error("API_KEY environment variable not set");
+    //throw new Error("API_KEY environment variable not set");
+    console.log("API_KEY environment variable not set");
 }
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY ?? '' });
 
 const textModel = 'gemini-2.5-flash';
 const groundedModel = 'gemini-2.5-flash';
@@ -59,6 +60,9 @@ export const summarizeUrl = async (url: string, detail: SummaryDetail): Promise<
     const prompt = getUrlSummarizationPrompt(url, detail);
 
     try {
+
+        //if(ai.)
+
         const response: GenerateContentResponse = await ai.models.generateContent({
             model: groundedModel,
             contents: prompt,
