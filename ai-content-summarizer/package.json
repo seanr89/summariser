@@ -15,6 +15,7 @@
     "dist": "npm run build && electron-builder",
     "dist:win": "npm run build && electron-builder --win",
     "dist:mac": "npm run build && electron-builder --mac",
+    "dist:multi": "npm run build && electron-builder -mwl",
     "release": "npm run dist"
   },
   "dependencies": {
