@@ -13,7 +13,7 @@
     "start": "concurrently \"npm run dev\" \"npm run electron\"",
     "electron": "electron . --trace-warnings",
     "dist": "npm run build && electron-builder",
-    "dist:win": "npm run build && electron-builder --win",
+    "dist:win": "npm run build && electron-builder --target=win",
     "dist:mac": "npm run build && electron-builder --mac",
     "dist:multi": "npm run build && electron-builder -mwl",
     "release": "npm run dist"
@@ -52,7 +52,7 @@
     },
     "mac": {
       "target": "dmg",
-      "arch": "arm64"
+      "defaultArch": "arm64"
     },
     "win": {
       "target": "nsis",
