@@ -40,7 +40,7 @@
   },
   "build": {
     "appId": "com.example.ai-content-summarizer",
-    "productName": "Data Summarizer",
+    "productName": "summarizer",
     "files": [
       "dist/**/*",
       "main.js",
