@@ -6,6 +6,7 @@ import * as openaiService from './services/openaiService';
 import Header from './components/Header';
 import SummaryDisplay from './components/SummaryDisplay';
 import Spinner from './components/Spinner';
+import Error from './components/Error';
 import { LinkIcon, FileIcon, UploadCloudIcon } from './components/icons';
 
 const App: React.FC = () => {
@@ -67,7 +68,11 @@ const App: React.FC = () => {
       setSummaryResult(result);
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        if (err.message.includes('GEMINI_API_KEY')) {
+          setError('The GEMINI_API_KEY environment variable is not set. Please set it in your .env file or as a system environment variable.');
+        } else {
+          setError(err.message);
+        }
       } else {
         setError('An unknown error occurred.');
       }
@@ -213,10 +218,9 @@ const App: React.FC = () => {
         </div>
         
         {error && (
-            <div className="mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
-                <p className="font-bold">Error</p>
-                <p>{error}</p>
-            </div>
+          <div className="mt-6">
+            <Error error={error} />
+          </div>
         )}
 
         {summaryResult && (
