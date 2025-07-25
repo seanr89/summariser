@@ -1,4 +1,4 @@
-name: Build Windows
+name: Build Mac
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -21,12 +21,12 @@ jobs:
       run: npm install
       working-directory: ./ai-content-summarizer
 
-    - name: Build Windows installer
-      run: npm run dist:win
+    - name: Build macOS app
+      run: npm run dist:mac
       working-directory: ./ai-content-summarizer
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ai-summarizer
-        path: ./ai-content-summarizer/dist_electron/summarizer*.exe
+        path: ./ai-content-summarizer/dist_electron/summarizer-*.dmg

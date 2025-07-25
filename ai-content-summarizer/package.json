@@ -39,7 +39,7 @@
     "vite": "^6.2.0"
   },
   "build": {
-    "appId": "com.example.ai-content-summarizer",
+    "appId": "com.example.ai-summarizer",
     "productName": "summarizer",
     "files": [
       "dist/**/*",
