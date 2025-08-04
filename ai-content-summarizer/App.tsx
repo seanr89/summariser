@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ChangeEvent } from 'react';
+import React, { useState, useCallback, ChangeEvent, useEffect } from 'react';
 import { InputMode, SummaryResult, AIModel, SummaryDetail } from './types';
 import * as geminiService from './services/geminiService';
 import * as claudeService from './services/claudeService';
@@ -19,6 +19,12 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<AIModel>(AIModel.GEMINI);
   const [summaryDetail, setSummaryDetail] = useState<SummaryDetail>(SummaryDetail.DETAILED);
+  const [geminiApiKey, setGeminiApiKey] = useState<string>('');
+
+  useEffect(() => {
+    // Initialize the Gemini API key from environment variables
+    geminiService.updateKey('');
+  }, []);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -46,7 +52,7 @@ const App: React.FC = () => {
     setIsLoading(true);
 
     try {
-      let result: SummaryResult;
+      let result: SummaryResult | null = null;
       
       const service = {
           [AIModel.GEMINI]: geminiService,
@@ -68,8 +74,8 @@ const App: React.FC = () => {
       setSummaryResult(result);
     } catch (err) {
       if (err instanceof Error) {
-        if (err.message.includes('GEMINI_API_KEY')) {
-          setError('The GEMINI_API_KEY environment variable is not set. Please set it in your .env file or as a system environment variable.');
+        if (err.message.includes('Gemini API key not set')) {
+          setError('Please enter your Gemini API key above.');
         } else {
           setError(err.message);
         }
@@ -173,6 +179,24 @@ const App: React.FC = () => {
                   </div>
               </div>
             </div>
+            {selectedModel === AIModel.GEMINI && (
+              <div className="mb-6">
+                  <label htmlFor="gemini-api-key" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Gemini API Key
+                  </label>
+                  <input
+                      id="gemini-api-key"
+                      type="password"
+                      value={geminiApiKey}
+                      onChange={(e) => {
+                          setGeminiApiKey(e.target.value);
+                          geminiService.updateKey(e.target.value);
+                      }}
+                      placeholder="Enter your Gemini API key"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
+                  />
+              </div>
+            )}
 
             <form onSubmit={handleSubmit}>
               {inputMode === InputMode.URL ? (

@@ -1,14 +1,15 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { SummaryResult, SummaryDetail } from '../types';
 
-if (!process.env.GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY environment variable not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY ?? 'unknown' });
+let ai: GoogleGenAI;
 
 const textModel = 'gemini-2.5-flash';
 const groundedModel = 'gemini-2.5-flash';
+
+export const updateKey = (apiKey: string) => {
+    ai = new GoogleGenAI({ apiKey: apiKey });
+}
+
 
 const getTextSummarizationPrompt = (detail: SummaryDetail): string => {
     switch (detail) {
@@ -36,6 +37,7 @@ const getUrlSummarizationPrompt = (url: string, detail: SummaryDetail): string =
 
 
 export const summarizeText = async (text: string, detail: SummaryDetail): Promise<SummaryResult> => {
+    if (!ai) throw new Error("Gemini API key not set.");
     if (!text) throw new Error("Input text cannot be empty.");
 
     const instruction = getTextSummarizationPrompt(detail);
@@ -54,7 +56,9 @@ export const summarizeText = async (text: string, detail: SummaryDetail): Promis
 };
 
 export const summarizeUrl = async (url: string, detail: SummaryDetail): Promise<SummaryResult> => {
+    if (!ai) throw new Error("Gemini API key not set.");
     if (!url) throw new Error("URL cannot be empty.");
+
 
     const prompt = getUrlSummarizationPrompt(url, detail);
 
