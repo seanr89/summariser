@@ -1,7 +1,7 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { SummaryResult, SummaryDetail } from '../types';
 
-let ai: GoogleGenAI;
+let ai: GoogleGenAI | null = null;
 
 const textModel = 'gemini-2.5-flash';
 const groundedModel = 'gemini-2.5-flash';
@@ -9,7 +9,6 @@ const groundedModel = 'gemini-2.5-flash';
 export const updateKey = (apiKey: string) => {
     ai = new GoogleGenAI({ apiKey: apiKey });
 }
-
 
 const getTextSummarizationPrompt = (detail: SummaryDetail): string => {
     switch (detail) {
@@ -59,13 +58,8 @@ export const summarizeUrl = async (url: string, detail: SummaryDetail): Promise<
     if (!ai) throw new Error("Gemini API key not set.");
     if (!url) throw new Error("URL cannot be empty.");
 
-
     const prompt = getUrlSummarizationPrompt(url, detail);
-
     try {
-
-        //if(ai.)
-
         const response: GenerateContentResponse = await ai.models.generateContent({
             model: groundedModel,
             contents: prompt,

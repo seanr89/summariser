@@ -1,8 +1,9 @@
 {
   "name": "ai-content-summarizer",
+  "description": "test app lolol",
   "author": "Sean Rafferty",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.2.0",
   "type": "module",
   "homepage": "./",
   "main": "main.js",
@@ -15,10 +16,10 @@
     "dist": "npm run build && electron-builder",
     "dist:win": "npm run build && electron-builder --win --x64",
     "dist:mac": "npm run build && electron-builder --mac --arm64",
-    "dist:multi": "npm run build && electron-builder -mwl",
     "release": "npm run dist"
   },
   "dependencies": {
+    "fuse.js": "^7.1.0",
     "@google/genai": "^1.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

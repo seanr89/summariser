@@ -6,7 +6,7 @@ import * as openaiService from './services/openaiService';
 import Header from './components/Header';
 import SummaryDisplay from './components/SummaryDisplay';
 import Spinner from './components/Spinner';
-import Error from './components/Error';
+import ErrorDisplay from './components/Error';
 import { LinkIcon, FileIcon, UploadCloudIcon } from './components/icons';
 
 const App: React.FC = () => {
@@ -72,7 +72,7 @@ const App: React.FC = () => {
         result = await service.summarizeText(fileContent, summaryDetail);
       }
       setSummaryResult(result);
-    } catch (err) {
+    } catch (err: unknown) {
       if (err instanceof Error) {
         if (err.message.includes('Gemini API key not set')) {
           setError('Please enter your Gemini API key above.');
@@ -138,119 +138,110 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
-      <Header />
-      <main className="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8">
-          <div className="grid grid-cols-2 gap-2">
-            <TabButton mode={InputMode.URL} icon={<LinkIcon className="w-5 h-5" />} />
-            <TabButton mode={InputMode.FILE} icon={<FileIcon className="w-5 h-5" />} />
+        <Header />
+       <main className="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8">
+           <div className="grid grid-cols-2 gap-2">
+             <TabButton mode={InputMode.URL} icon={<LinkIcon className="w-5 h-5" />} />
+             <TabButton mode={InputMode.FILE} icon={<FileIcon className="w-5 h-5" />} />
+           </div>
           </div>
-
           <div className="border-t border-gray-200 dark:border-gray-700 mt-6 pt-6">
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
-                  <label htmlFor="model-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      AI Model
-                  </label>
-                  <select
-                      id="model-select"
-                      value={selectedModel}
-                      onChange={(e) => setSelectedModel(e.target.value as AIModel)}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
-                  >
-                      {Object.values(AIModel).map(model => (
-                          <option key={model} value={model}>{model}</option>
-                      ))}
-                  </select>
-              </div>
-              <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Summary Detail
-                  </label>
-                  <div className="flex w-full rounded-md shadow-sm">
-                      {Object.values(SummaryDetail).map((detail, index, arr) => (
-                          <DetailSelectorButton 
-                              key={detail}
-                              detail={detail}
-                              isFirst={index === 0}
-                              isLast={index === arr.length - 1}
-                          />
-                      ))}
-                  </div>
-              </div>
+                   <label htmlFor="model-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                       AI Model
+                   </label>
+                   <select
+                       id="model-select"
+                       value={selectedModel}
+                       onChange={(e) => setSelectedModel(e.target.value as AIModel)}
+                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
+                   >
+                       {Object.values(AIModel).map(model => (
+                           <option key={model} value={model}>{model}</option>
+                       ))}
+                   </select>
+               </div>
+               <div>
+                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                       Summary Detail
+                   </label>
+                   <div className="flex w-full rounded-md shadow-sm">
+                       {Object.values(SummaryDetail).map((detail, index, arr) => (
+                           <DetailSelectorButton 
+                               key={detail}
+                               detail={detail}
+                               isFirst={index === 0}
+                               isLast={index === arr.length - 1}
+                           />
+                       ))}
+                   </div>
+               </div>
             </div>
             {selectedModel === AIModel.GEMINI && (
-              <div className="mb-6">
-                  <label htmlFor="gemini-api-key" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Gemini API Key
-                  </label>
-                  <input
-                      id="gemini-api-key"
-                      type="password"
-                      value={geminiApiKey}
-                      onChange={(e) => {
-                          setGeminiApiKey(e.target.value);
-                          geminiService.updateKey(e.target.value);
-                      }}
-                      placeholder="Enter your Gemini API key"
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
-                  />
-              </div>
-            )}
+               <div className="mb-6">
+                   <label htmlFor="gemini-api-key" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                       Gemini API Key
+                   </label>
+                   <input
+                       id="gemini-api-key"
+                       type="password"
+                       value={geminiApiKey}
+                       onChange={(e) => {
+                           setGeminiApiKey(e.target.value);
+                           geminiService.updateKey(e.target.value);
+                       }}
+                       placeholder="Enter your Gemini API key"
+                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
+                   />
+               </div>
+             )}
+              <form onSubmit={handleSubmit}>
+               {inputMode === InputMode.URL ? (
+                 <div>
+                   <label htmlFor="url-input" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                     Web Page URL
+                   </label>
+                   <input
+                     id="url-input"
+                     type="url"
+                     value={inputValue}
+                     onChange={(e) => setInputValue(e.target.value)}
+                     placeholder="https://example.com/article"
+                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
+                     required
+                   />
+                 </div>
+               ) : (
+                 <div>
+                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                     Upload Document
+                   </label>
+                   <label htmlFor="file-upload" className="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md border-2 border-dashed border-gray-300 dark:border-gray-500 flex flex-col justify-center items-center w-full h-32 text-center p-4 hover:border-blue-400 dark:hover:border-blue-500 transition-colors">
+                       <UploadCloudIcon className="w-10 h-10 mx-auto text-gray-400" />
+                       <span className="mt-2 block text-sm text-gray-600 dark:text-gray-300">
+                           {fileName ? fileName : <><span>Click to upload</span> or drag and drop</>}
+                       </span>
+                       <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept=".txt,.md,.html" />
+                   </label>
+                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Supports .txt, .md, .html</p>
+                 </div>
+               )}
 
-            <form onSubmit={handleSubmit}>
-              {inputMode === InputMode.URL ? (
-                <div>
-                  <label htmlFor="url-input" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Web Page URL
-                  </label>
-                  <input
-                    id="url-input"
-                    type="url"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="https://example.com/article"
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
-                    required
-                  />
-                </div>
-              ) : (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Upload Document
-                  </label>
-                  <label htmlFor="file-upload" className="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md border-2 border-dashed border-gray-300 dark:border-gray-500 flex flex-col justify-center items-center w-full h-32 text-center p-4 hover:border-blue-400 dark:hover:border-blue-500 transition-colors">
-                      <UploadCloudIcon className="w-10 h-10 mx-auto text-gray-400" />
-                      <span className="mt-2 block text-sm text-gray-600 dark:text-gray-300">
-                          {fileName ? fileName : <><span>Click to upload</span> or drag and drop</>}
-                      </span>
-                      <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept=".txt,.md,.html" />
-                  </label>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Supports .txt, .md, .html</p>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="mt-6 w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
-              >
-                {isLoading ? <Spinner /> : 'Summarize'}
-              </button>
-            </form>
+               <button
+                 type="submit"
+                 disabled={isLoading}
+                 className="mt-6 w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
+               >
+                 {isLoading ? <Spinner /> : 'Summarize'}
+               </button>
+             </form>
           </div>
-        </div>
-        
-        {error && (
-          <div className="mt-6">
-            <Error error={error} />
-          </div>
-        )}
-
-        {summaryResult && (
-          <SummaryDisplay result={summaryResult} onExport={handleExport} />
-        )}
-      </main>
+          </main>
+          {summaryResult && (
+           <SummaryDisplay result={summaryResult} onExport={handleExport} />
+         )}
     </div>
   );
 };
