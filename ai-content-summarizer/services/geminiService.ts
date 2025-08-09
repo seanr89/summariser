@@ -7,6 +7,7 @@ const textModel = 'gemini-2.5-flash';
 const groundedModel = 'gemini-2.5-flash';
 
 export const updateKey = (apiKey: string) => {
+    console.log('updatingKey', apiKey);
     ai = new GoogleGenAI({ apiKey: apiKey });
 }
 
