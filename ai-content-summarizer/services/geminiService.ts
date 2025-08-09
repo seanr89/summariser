@@ -36,6 +36,7 @@ const getUrlSummarizationPrompt = (url: string, detail: SummaryDetail): string =
 
 
 export const summarizeText = async (text: string, detail: SummaryDetail): Promise<SummaryResult> => {
+    console.log('gemini:summarizeText');
     if (!ai) throw new Error("Gemini API key not set.");
     if (!text) throw new Error("Input text cannot be empty.");
 
@@ -55,6 +56,7 @@ export const summarizeText = async (text: string, detail: SummaryDetail): Promis
 };
 
 export const summarizeUrl = async (url: string, detail: SummaryDetail): Promise<SummaryResult> => {
+    console.log('gemini:summarizeUrl');
     if (!ai) throw new Error("Gemini API key not set.");
     if (!url) throw new Error("URL cannot be empty.");
 

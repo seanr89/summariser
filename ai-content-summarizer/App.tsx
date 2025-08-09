@@ -16,7 +16,7 @@ const App: React.FC = () => {
   const [fileName, setFileName] = useState<string>('');
   const [summaryResult, setSummaryResult] = useState<SummaryResult | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  //const [error, //setError] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<AIModel>(AIModel.GEMINI);
   const [summaryDetail, setSummaryDetail] = useState<SummaryDetail>(SummaryDetail.DETAILED);
   const [geminiApiKey, setGeminiApiKey] = useState<string>('');
@@ -34,10 +34,10 @@ const App: React.FC = () => {
       reader.onload = (event) => {
         const text = event.target?.result as string;
         setFileContent(text);
-        setError(null);
+        //(null);
       };
       reader.onerror = () => {
-        setError("Failed to read file.");
+        ////setError("Failed to read file.");
         setFileContent('');
         setFileName('');
       }
@@ -46,8 +46,9 @@ const App: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('handleSubmit:called');
     e.preventDefault();
-    setError(null);
+    ////setError(null);
     setSummaryResult(null);
     setIsLoading(true);
 
@@ -75,12 +76,12 @@ const App: React.FC = () => {
     } catch (err: unknown) {
       if (err instanceof Error) {
         if (err.message.includes('Gemini API key not set')) {
-          setError('Please enter your Gemini API key above.');
+          //setError('Please enter your Gemini API key above.');
         } else {
-          setError(err.message);
+          //setError(err.message);
         }
       } else {
-        setError('An unknown error occurred.');
+        //setError('An unknown error occurred.');
       }
     } finally {
       setIsLoading(false);
@@ -105,7 +106,7 @@ const App: React.FC = () => {
     <button
       onClick={() => {
         setInputMode(mode);
-        setError(null);
+        //setError(null);
         setSummaryResult(null);
       }}
       className={`flex items-center justify-center w-full px-4 py-3 font-semibold rounded-t-lg transition-colors duration-200 ease-in-out focus:outline-none ${
